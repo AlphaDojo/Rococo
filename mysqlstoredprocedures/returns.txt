@@ -1,0 +1,20 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdatereturns`(
+IN _returns_id INT UNSIGNED,
+IN _return_dmgstatus varchar(45),
+IN _return_fee float,
+IN _borrow_id INT UNSIGNED)
+BEGIN
+	DECLARE _return_date DATE; 
+    SET _return_date = (SELECT return_date FROM borrowing where borrow_id LIKE _borrow_id);
+	IF _returns_id = 0 THEN
+		INSERT INTO returns(return_date_real, return_dmgstatus, return_fee, borrow_id)
+        VALUES(_return_date, _return_dmgstatus, _return_fee, _borrow_id);
+        
+        SET _returns_id = last_insert_id();
+	ELSE 
+		UPDATE returns
+        SET return_date_real = _return_date, return_dmgstatus = _return_dmgstatus, return_fee = _return_fee, borrow_id = _borrow_id
+        WHERE return_id = _returns_id;
+	END IF;
+    SELECT _returns_id AS 'return_id';
+END

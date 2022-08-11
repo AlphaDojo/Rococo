@@ -1,0 +1,68 @@
+CREATE TABLE `user` (
+  `usr_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `usr_fname` varchar(45) DEFAULT NULL,
+  `usr_lname` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`usr_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `supplier` (
+  `supplier_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `supplier_name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`supplier_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `inventory` (
+  `inv_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `inv_quantity` int unsigned DEFAULT NULL,
+  `inv_availability` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `employee` (
+  `emp_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `amp_fname` varchar(45) DEFAULT NULL,
+  `emp_lname` varchar(45) DEFAULT NULL,
+  `emp_job` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`emp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `item` (
+  `item_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `item_name` varchar(45) DEFAULT NULL,
+  `item_description` varchar(255) DEFAULT NULL,
+  `inv_id` int unsigned DEFAULT NULL,
+  `supplier_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`item_id`),
+  KEY `supplier_id` (`supplier_id`),
+  KEY `inv_id` (`inv_id`),
+  CONSTRAINT `item_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `supplier` (`supplier_id`),
+  CONSTRAINT `item_ibfk_2` FOREIGN KEY (`inv_id`) REFERENCES `inventory` (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `borrowing` (
+  `borrow_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `borrow_date` date DEFAULT NULL,
+  `return_date` date DEFAULT NULL,
+  `borrow_status` varchar(30) DEFAULT NULL,
+  `usr_id` int unsigned DEFAULT NULL,
+  `emp_id` int unsigned DEFAULT NULL,
+  `item_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`borrow_id`),
+  KEY `item_id` (`item_id`),
+  KEY `emp_id` (`emp_id`),
+  KEY `usr_id` (`usr_id`),
+  CONSTRAINT `borrowing_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item` (`item_id`),
+  CONSTRAINT `borrowing_ibfk_2` FOREIGN KEY (`emp_id`) REFERENCES `employee` (`emp_id`),
+  CONSTRAINT `borrowing_ibfk_3` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+CREATE TABLE `returns` (
+  `return_id` int unsigned NOT NULL AUTO_INCREMENT,
+  `return_date_real` date DEFAULT NULL,
+  `return_dmgstatus` varchar(45) DEFAULT NULL,
+  `return_fee` float DEFAULT NULL,
+  `borrow_id` int unsigned DEFAULT NULL,
+  PRIMARY KEY (`return_id`),
+  KEY `borrow_id` (`borrow_id`),
+  CONSTRAINT `returns_ibfk_1` FOREIGN KEY (`borrow_id`) REFERENCES `borrowing` (`borrow_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci

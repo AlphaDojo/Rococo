@@ -1,0 +1,22 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdateborrowing`(
+IN _borrow_id INT UNSIGNED,
+IN _return_days INT UNSIGNED,
+IN _borrow_status varchar(30),
+IN _usr_id INT UNSIGNED,
+IN _emp_id INT UNSIGNED,
+IN _item_id INT UNSIGNED)
+BEGIN
+	DECLARE _return_date DATE;
+    SET _return_date = curdate() + INTERVAL _return_days DAY;
+	IF _borrow_id = 0 THEN
+		INSERT INTO borrowing(borrow_date, return_date, borrow_status, usr_id, emp_id, item_id)
+        VALUES(curdate(), _return_date, _borrow_status, _usr_id, _emp_id, _item_id);
+        
+        SET _borrow_id = last_insert_id();
+	ELSE 
+		UPDATE borrowing
+        SET return_date = _return_date, borrow_status = _borrow_status, usr_id = _usr_id, emp_id = _emp_id, item_id = _item_id
+        WHERE borrow_id = _borrow_id;
+	END IF;
+    SELECT _borrow_id AS 'borrow_id';
+END

@@ -1,0 +1,18 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdateemployee`(
+IN _emp_id INT UNSIGNED, 
+IN _amp_fname varchar(45), 
+IN _emp_lname varchar(45),
+IN _emp_job varchar(45))
+BEGIN
+	IF _emp_id = 0 THEN
+		INSERT INTO employee(amp_fname, emp_lname, emp_job)
+        VALUES(_amp_fname, _emp_lname, _emp_job);
+        
+        SET _emp_id = last_insert_id();
+	ELSE 
+		UPDATE employee
+        SET amp_fname = _amp_fname, emp_lname = _emp_lname, emp_job = _emp_job
+        WHERE emp_id = _emp_id;
+	END IF;
+    SELECT _emp_id AS 'emp_id';
+END

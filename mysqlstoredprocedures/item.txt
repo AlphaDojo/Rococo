@@ -1,0 +1,19 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdatebook`(
+IN _item_id INT UNSIGNED, 
+IN _item_name varchar(45), 
+IN _item_description varchar(45),
+IN _inv_id INT UNSIGNED,
+IN _supplier_id INT UNSIGNED)
+BEGIN
+	IF _item_id = 0 THEN
+		INSERT INTO item(item_name, item_description, inv_id, supplier_id)
+        VALUES(_item_name, _item_description, _inv_id, _supplier_id);
+        
+        SET _item_id = last_insert_id();
+	ELSE 
+		UPDATE item
+        SET item_name = _item_name, item_description = _item_description, inv_id = _inv_id, supplier_id = _supplier_id
+        WHERE item_id = _item_id;
+	END IF;
+    SELECT _item_id AS 'item_id';
+END

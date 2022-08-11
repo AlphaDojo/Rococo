@@ -1,0 +1,17 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdateuser`(
+IN _usr_id INT UNSIGNED, 
+IN _usr_fname varchar(45), 
+IN _usr_lame varchar(45))
+BEGIN
+	IF _usr_id = 0 THEN
+		INSERT INTO user(usr_fname, usr_lname)
+        VALUES(_usr_fname, _usr_lame);
+        
+        SET _usr_id = last_insert_id();
+	ELSE 
+		UPDATE user
+        SET usr_fname = _usr_fname, usr_lname = _usr_lame
+        WHERE usr_id = _usr_id;
+	END IF;
+    SELECT _usr_id AS 'usr_id';
+END

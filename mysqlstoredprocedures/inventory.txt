@@ -1,0 +1,28 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdateinventory`(
+IN _inv_id INT UNSIGNED,
+IN _inv_quantity INT UNSIGNED
+)
+BEGIN
+	DECLARE _inv_availability varchar(30);
+	IF _inv_id = 0 THEN
+		IF _inv_quantity <> 0 THEN
+			SET _inv_availability = "Available";
+		ELSE
+			SET _inv_availability = "Unavailable";
+		END IF;
+		INSERT INTO inventory(inv_quantity, inv_availability)
+        VALUES(_inv_quantity, _inv_availability);
+        
+        SET _inv_id = last_insert_id();
+	ELSE 
+		IF _inv_quantity <> 0 THEN
+			SET _inv_availability = "Available";
+		ELSE
+			SET _inv_availability = "Unavailable";
+		END IF;
+		UPDATE inventory
+        SET inv_quantity = _inv_quantity, inv_availability = _inv_availability
+        WHERE inv_id = _inv_id;
+	END IF;
+    SELECT _inv_id AS 'inv_id';
+END

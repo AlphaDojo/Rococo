@@ -1,0 +1,16 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addorupdatesupplier`(
+IN _supplier_id INT UNSIGNED,
+IN _supplier_name varchar(45))
+BEGIN
+	IF _supplier_id = 0 THEN
+		INSERT INTO supplier(supplier_name)
+        VALUES(_supplier_name);
+        
+        SET _supplier_id = last_insert_id();
+	ELSE 
+		UPDATE supplier
+        SET supplier_name = _supplier_name
+        WHERE supplier_id = _supplier_id;
+	END IF;
+    SELECT _supplier_id AS 'supplier_id';
+END
